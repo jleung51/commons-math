@@ -178,6 +178,7 @@
              deprecation="${compile.deprecation}"
              optimize="${compile.optimize}">
           <classpath refid="test.classpath"/>
+          <compilerarg value="${mutator}"/>
       </javac>
 
       <copy todir="${build.home}/test-classes">
