@@ -5,9 +5,9 @@
     The ASF licenses this file to You under the Apache License, Version 2.0
     (the "License"); you may not use this file except in compliance with
     the License.  You may obtain a copy of the License at
-   
+
          http://www.apache.org/licenses/LICENSE-2.0
-   
+
     Unless required by applicable law or agreed to in writing, software
     distributed under the License is distributed on an "AS IS" BASIS,
     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -37,6 +37,14 @@
   <property name="junit.version"           value="4.4"/>
   <property name="junit.home"              value="/usr/share/junit"/>
   <property name="junit.jar"               value="${junit.home}/junit-${junit.version}.jar"/>
+
+
+
+
+
+  <property name="mutation" value=":ALL"/>
+  <property name="mutator" value="-XMutator${mutation}"/>
+  <property name="major" value="-/opt/major/bin/javac"/>
 
 
 <!-- ========== Component Declarations ==================================== -->
@@ -91,7 +99,7 @@
 
   <!-- Should Java compilations set the 'optimize' compiler option? -->
   <property name="compile.optimize"        value="true"/>
-    
+
   <!-- JDK level -->
   <property name="compile.source"          value="1.5"/>
   <property name="compile.target"          value="1.5"/>
@@ -150,9 +158,11 @@
              source="${compile.source}"
              target="${compile.target}"
              debug="${compile.debug}"
+             executable="${major}"
        deprecation="${compile.deprecation}"
           optimize="${compile.optimize}">
       <classpath refid="compile.classpath"/>
+      <compilerarg value="${mutator}"/>
     </javac>
   </target>
 
@@ -164,11 +174,12 @@
       <javac srcdir="${test.home}"
              destdir="${build.home}/test-classes"
              debug="${compile.debug}"
+             executable="${major}"
              deprecation="${compile.deprecation}"
              optimize="${compile.optimize}">
           <classpath refid="test.classpath"/>
       </javac>
-    
+
       <copy todir="${build.home}/test-classes">
           <fileset dir="${test.resources}">
               <include name="**/*.xml"/>
@@ -184,14 +195,17 @@
                errorProperty="test.failed"
                failureProperty="test.failed"
                fork="true"
+              mutationAnalysis="true"
+              resultFile="results.csv"
+              killDetailsFile="killed.csv"
                showOutput="true">
                <formatter usefile="false" type="plain"/>
                <classpath refid="test.classpath"/>
                <batchtest>
                    <fileset dir="${test.home}">
-                      <include name="**/*Test.java"/> 
-                      <include name="**/*TestBinary.java"/> 
-                      <include name="**/*TestPermutations.java"/> 
+                      <include name="**/*Test.java"/>
+                      <include name="**/*TestBinary.java"/>
+                      <include name="**/*TestPermutations.java"/>
                       <exclude name="**/*AbstractTest.java"/>
                    </fileset>
                </batchtest>
@@ -224,8 +238,8 @@
             windowtitle="${component.title} ${component.version}"
                  bottom="Copyright (c) 2003-${current.year}  Apache Software Foundation"
            classpathref="compile.classpath">
-        <link href="http://java.sun.com/j2se/1.5.0/docs/api/"/>  
-        <link href="http://commons.apache.org/collections/api"/> 
+        <link href="http://java.sun.com/j2se/1.5.0/docs/api/"/>
+        <link href="http://commons.apache.org/collections/api"/>
     </javadoc>
   </target>
 
@@ -243,7 +257,7 @@
         <attribute name="Specification-Version"    value="${component.version}"/>
         <attribute name="Specification-Vendor"     value="Apache Software Foundation"/>
         <attribute name="Implementation-Title"     value="${component.title}"/>
-        <attribute name="Implementation-Version"   value="${component.version}"/> 
+        <attribute name="Implementation-Version"   value="${component.version}"/>
         <attribute name="Implementation-Vendor"    value="Apache Software Foundation"/>
         <attribute name="Implementation-Vendor-Id" value="org.apache"/>
         <attribute name="X-Compile-Source-JDK"     value="${compile.source}"/>
@@ -321,7 +335,7 @@
 
 <!-- ========== Download Dependencies =========================================== -->
 
-    <target name="download-dependencies" 
+    <target name="download-dependencies"
            depends="check-availability" unless="skip.download">
         <echo message="doing download-dependencies..." />
         <antcall target="download-junit" />
@@ -339,6 +353,6 @@
             usetimestamp="true" ignoreerrors="true"
             src="http://repo1.maven.org/maven2/junit/junit/${junit.version}/junit-${junit.version}.jar"/>
     </target>
-      
+
 </project>
 
