@@ -194,7 +194,7 @@
       <junit printsummary="true"
                errorProperty="test.failed"
                failureProperty="test.failed"
-               fork="true"
+               fork="false"
               mutationAnalysis="true"
               resultFile="results.csv"
               killDetailsFile="killed.csv"
