@@ -44,7 +44,7 @@
 
   <property name="mutation" value=":ALL"/>
   <property name="mutator" value="-XMutator${mutation}"/>
-  <property name="major" value="-/opt/major/bin/javac"/>
+  <property name="major" value="./major/bin/javac"/>
 
 
 <!-- ========== Component Declarations ==================================== -->
