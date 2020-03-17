@@ -42,11 +42,6 @@
 
 
 
-  <property name="mutation" value=":ALL"/>
-  <property name="mutator" value="-XMutator${mutation}"/>
-  <property name="major" value="./major/bin/javac"/>
-
-
 <!-- ========== Component Declarations ==================================== -->
 
 
@@ -158,11 +153,9 @@
              source="${compile.source}"
              target="${compile.target}"
              debug="${compile.debug}"
-             executable="${major}"
        deprecation="${compile.deprecation}"
           optimize="${compile.optimize}">
       <classpath refid="compile.classpath"/>
-      <compilerarg value="${mutator}"/>
     </javac>
   </target>
 
@@ -174,11 +167,9 @@
       <javac srcdir="${test.home}"
              destdir="${build.home}/test-classes"
              debug="${compile.debug}"
-             executable="${major}"
              deprecation="${compile.deprecation}"
              optimize="${compile.optimize}">
           <classpath refid="test.classpath"/>
-          <compilerarg value="${mutator}"/>
       </javac>
 
       <copy todir="${build.home}/test-classes">
@@ -196,12 +187,10 @@
                errorProperty="test.failed"
                failureProperty="test.failed"
                fork="false"
-              mutationAnalysis="true"
-              resultFile="results.csv"
-              killDetailsFile="killed.csv"
                showOutput="true">
                <formatter usefile="false" type="plain"/>
                <classpath refid="test.classpath"/>
+                <classpath location="lib/junit-4.11.jar" />
                <batchtest>
                    <fileset dir="${test.home}">
                       <include name="**/*Test.java"/>
